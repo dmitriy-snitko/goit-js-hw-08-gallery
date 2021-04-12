@@ -10,27 +10,29 @@ const refs = {
 
 let galleryCurrentItem = null;
 
-const galleryItemsMarkup = galleryItems.map(({ preview, original, description }) => {
-  return `<li class="gallery__item">
-  <a
-    class="gallery__link"
-    href="${original}"
-  >
-    <img
-      class="gallery__image"
-      src="${preview}"
-      data-source="${original}"
-      alt="${description}"
-    />
-  </a>
-</li>`;
-}).join('');
-
-refs.gallery.insertAdjacentHTML('beforeend', galleryItemsMarkup);
+refs.gallery.insertAdjacentHTML('beforeend', createGalleryItemsMarkup(galleryItems));
 
 refs.gallery.addEventListener('click', onGalleryImageClick);
 refs.lightboxOverlay.addEventListener('click', lightboxClose);
 refs.closeLightboxBtn.addEventListener('click', lightboxClose);
+
+function createGalleryItemsMarkup(galleryItems) {
+  return galleryItems.map(({ preview, original, description }) => {
+    return `<li class="gallery__item">
+    <a
+      class="gallery__link"
+      href="${original}"
+    >
+      <img
+        class="gallery__image"
+        src="${preview}"
+        data-source="${original}"
+        alt="${description}"
+      />
+    </a>
+  </li>`;
+  }).join('');
+}
 
 function onGalleryImageClick(e) {
   if (e.target.nodeName !== 'IMG') {
@@ -59,15 +61,15 @@ function onKeyDown(e) {
   const galleryPreviousItem = galleryCurrentItem.previousElementSibling;
   const galleryNextItem = galleryCurrentItem.nextElementSibling;
 
-  if (e.key === 'ArrowLeft' && galleryPreviousItem) {
+  if (e.code === 'ArrowLeft' && galleryPreviousItem) {
     galleryCurrentItem = galleryPreviousItem;
   }
 
-  if (e.key === 'ArrowRight' && galleryNextItem) {
+  if (e.code === 'ArrowRight' && galleryNextItem) {
     galleryCurrentItem = galleryNextItem;
   }
 
-  if (e.key === 'Escape') {
+  if (e.code === 'Escape') {
     lightboxClose();
   }
 
