@@ -8,9 +8,12 @@ const refs = {
   closeLightboxBtn: document.querySelector('button[data-action = "close-lightbox"]')
 };
 
-let galleryCurrentItem = null;
-
 refs.gallery.insertAdjacentHTML('beforeend', createGalleryItemsMarkup(galleryItems));
+
+let currentItemIndex = 0;
+const galleryItemsRef = [...document.querySelectorAll('.gallery__item')];
+const originalImageURLs = galleryItems.map(el => el.original);
+const imageDescriptions = galleryItems.map(el => el.description);
 
 refs.gallery.addEventListener('click', onGalleryImageClick);
 refs.lightboxOverlay.addEventListener('click', lightboxClose);
@@ -46,7 +49,8 @@ function onGalleryImageClick(e) {
   refs.lightbox.classList.add('is-open');
 
   document.addEventListener('keydown', onKeyDown);
-  galleryCurrentItem = e.path[2];
+
+  currentItemIndex = galleryItemsRef.indexOf(e.path[2]);  
 };
 
 function lightboxClose() {
@@ -58,21 +62,21 @@ function lightboxClose() {
 };
 
 function onKeyDown(e) {
-  const galleryPreviousItem = galleryCurrentItem.previousElementSibling;
-  const galleryNextItem = galleryCurrentItem.nextElementSibling;
+  if (e.code === 'ArrowLeft' && currentItemIndex) {
+    currentItemIndex -= 1;
 
-  if (e.code === 'ArrowLeft' && galleryPreviousItem) {
-    galleryCurrentItem = galleryPreviousItem;
+    refs.lightboxImage.src = originalImageURLs[currentItemIndex];
+    refs.lightboxImage.alt = imageDescriptions[currentItemIndex];
   }
 
-  if (e.code === 'ArrowRight' && galleryNextItem) {
-    galleryCurrentItem = galleryNextItem;
+  if (e.code === 'ArrowRight' && currentItemIndex < galleryItemsRef.length - 1) {
+    currentItemIndex += 1;
+
+    refs.lightboxImage.src = originalImageURLs[currentItemIndex];
+    refs.lightboxImage.alt = imageDescriptions[currentItemIndex];
   }
 
   if (e.code === 'Escape') {
     lightboxClose();
   }
-
-  refs.lightboxImage.src = galleryCurrentItem.querySelector('.gallery__image').dataset.source;
-  refs.lightboxImage.alt = galleryCurrentItem.querySelector('.gallery__image').alt;
 }
