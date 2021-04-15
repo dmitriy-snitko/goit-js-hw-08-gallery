@@ -12,12 +12,8 @@ refs.gallery.insertAdjacentHTML('beforeend', createGalleryItemsMarkup(galleryIte
 
 let currentItemIndex = 0;
 const galleryItemsRef = [...document.querySelectorAll('.gallery__item')];
-const originalImageURLs = galleryItems.map(el => el.original);
-const imageDescriptions = galleryItems.map(el => el.description);
 
 refs.gallery.addEventListener('click', onGalleryImageClick);
-refs.lightboxOverlay.addEventListener('click', lightboxClose);
-refs.closeLightboxBtn.addEventListener('click', lightboxClose);
 
 function createGalleryItemsMarkup(galleryItems) {
   return galleryItems.map(({ preview, original, description }) => {
@@ -27,8 +23,8 @@ function createGalleryItemsMarkup(galleryItems) {
       href="${original}"
     >
       <img
-        class="gallery__image"
-        src="${preview}"
+        class="gallery__image lazyload"
+        data-src="${preview}"
         data-source="${original}"
         alt="${description}"
       />
@@ -48,6 +44,8 @@ function onGalleryImageClick(e) {
 
   refs.lightbox.classList.add('is-open');
 
+  refs.lightboxOverlay.addEventListener('click', lightboxClose);
+  refs.closeLightboxBtn.addEventListener('click', lightboxClose);
   document.addEventListener('keydown', onKeyDown);
 
   currentItemIndex = galleryItemsRef.indexOf(e.path[2]);
@@ -59,22 +57,33 @@ function lightboxClose() {
   setImageAtribute('', '');
 
   document.removeEventListener('keydown', onKeyDown);
+  refs.lightboxOverlay.removeEventListener('click', lightboxClose);
+  refs.closeLightboxBtn.removeEventListener('click', lightboxClose);
 };
 
 function onKeyDown(e) {
-  if (e.code === 'ArrowLeft' && currentItemIndex) {
-    currentItemIndex -= 1;
+  const lastImageIndex = galleryItems.length - 1;
+
+  if (e.code === 'ArrowLeft') {
+    currentItemIndex === 0
+      ? currentItemIndex = lastImageIndex
+      : currentItemIndex -= 1;
   }
 
-  if (e.code === 'ArrowRight' && currentItemIndex < galleryItemsRef.length - 1) {
-    currentItemIndex += 1;
+  if (e.code === 'ArrowRight') {
+    currentItemIndex === lastImageIndex
+      ? currentItemIndex = 0
+      : currentItemIndex += 1;
   }
 
   if (e.code === 'Escape') {
     lightboxClose();
   }
 
-  setImageAtribute(originalImageURLs[currentItemIndex], imageDescriptions[currentItemIndex]);
+  const src = galleryItems[currentItemIndex].original;
+  const alt = galleryItems[currentItemIndex].description;
+
+  setImageAtribute(src, alt);
 }
 
 function setImageAtribute(src, alt) {
