@@ -113,13 +113,6 @@ export default [
   },
   {
     preview:
-      'https://cdn.pixabay.com/photo/2020/01/22/18/23/bridge-4785964__340.jpg',
-    original:
-      'https://cdn.pixabay.com/photo/2020/01/22/18/23/bridge-4785964_1280.jpg',
-    description: "Bridge on the background of the night city",
-  },
-  {
-    preview:
       'https://cdn.pixabay.com/photo/2021/03/11/02/57/mountain-6086083__340.jpg',
     original:
       'https://cdn.pixabay.com/photo/2021/03/11/02/57/mountain-6086083_1280.jpg',
@@ -278,13 +271,6 @@ export default [
     original:
       'https://cdn.pixabay.com/photo/2020/02/09/18/55/bastei-4834233_1280.jpg',
     description: "Bastei",
-  },
-  {
-    preview:
-      'https://cdn.pixabay.com/photo/2020/01/22/18/23/bridge-4785964__340.jpg',
-    original:
-      'https://cdn.pixabay.com/photo/2020/01/22/18/23/bridge-4785964_1280.jpg',
-    description: "Bridge on the background of the night city",
   },
   {
     preview:
